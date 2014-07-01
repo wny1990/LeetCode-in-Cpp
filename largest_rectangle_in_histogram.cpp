@@ -9,10 +9,8 @@ int largestRectangleArea(vector<int> &height)
 {
 	int max_area = 0;
 	int n = height.size();
-	//vector<int> minh(height.size(),0);
-	int minh[20000];
- 	for( int i = n -1 ; i >= 0; i--)
-// 	for( int i = 0 ; i < n; i++)
+	vector<int> minh(height.size(),0);
+ 	for( int i = 0 ; i < n; i++)
   	{
 		minh[i] = height[i];
 		if (i && height[i] < height[i-1])
