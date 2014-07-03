@@ -1,44 +1,52 @@
-class Solution {
-public:
+#include<iostream>
+using namespace std;
+//class Solution {
+//public:
 int longestValidParentheses(string s)
 {
 	int n = s.size();
 	if ( n == 0 ) return 0;
-	int  unmatched[n];
-//	vector<vector<short> > unmatched;
-/*	
-	for ( int i = 0; i < n; i++ )
+	int  unmatched;
+	int max = -1;
+	int i = 0;
+	while ( i < n )
 	{
-		vector<short> row(n,0);
-		unmatched.push_back(row);
-	}
-*/
-	int max = 0;
-	for ( int i = 0; i < n; i++ )
-	{
-		for ( int j = i; j < n; j++ )
+		int j;
+		for ( j = i; j < n; j++ )
 		{
 			if (j==i)
 			{
 				if ( s[i] == '(')
-					unmatched[j] = 1;
+					unmatched = 1;
 				else
-					unmatched[j] = -1;
+					unmatched = -1;
 			}	
-			else if ( unmatched[j-1] >= 0 )
-			//	unmatched[i][j] = unmatched[i][j-1] + (s[j] == '(') ? 1:(-1);
+			else 
+			{
 				if( s[j] == '(' )
-			 		unmatched[j] = unmatched[j-1] + 1;
+			 		unmatched = unmatched + 1;
 				else
-			 		unmatched[j] = unmatched[j-1] - 1;
-					
-			else
-				unmatched[j] = -1;
-			if ( unmatched[j] == 0 && j-i > max)
+			 		unmatched = unmatched - 1;
+			}		
+			if (unmatched < 0 )
+				break;
+			if ( unmatched== 0 && j-i > max)
+			{	cout << i << "  " << j << endl;
 				max = j- i;
+			}
 		}
+		if (j == n && unmatched > 0)
+			i+=unmatched;
+		else	
+			i = j + 1;
 	}
 	return max + 1;
 
     }
-};
+//};
+int main()
+{
+	cout << longestValidParentheses(")(((((()())()()))()(()))(" ) << endl;
+
+
+}
