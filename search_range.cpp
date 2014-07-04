@@ -4,8 +4,8 @@ vector<int> searchRange(int A[], int n, int target)
 {
 	if (n == 0)
 		return false;
-        int left = 0;
-        int right = n - 1;
+        int left = -1;
+        int right = n;
 	while (left <= right )
 	{
 		int pivot = (right + left)/2;
