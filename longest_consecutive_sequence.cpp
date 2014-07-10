@@ -1,43 +1,42 @@
 class Solution {
 public:
-void merge();
-void 
 int longestConsecutive(vector<int> &num) 
 {
 	unordered_map<int,int> mymap;
-	int pool = 0;
-	vector<int> count(num.size(),0);
+	unordered_map<int,int> degree;
 	for( int i = 0; i < num.size(); i++ )
 	{
-		if (mymap.find(num[i]) != mymap.end())
+		if (mymap.count(num[i]) )
 			continue;
-		int left = -1, right = -1;
-		if (mymap.find(num[i] - 1) != mymap.end())
-	        	left = (mymap.find(num[i] - 1))->second;
-		if (mymap.find(num[i] + 1) != mymap.end())
-	        	right = (mymap.find(num[i] + 1))->second;
-		if (left == -1 && right == -1)
+		mymap[num[i]] = num[i];
+		degree[num[i]] = 1;
+		if (mymap.count(num[i] + 1) )
 		{
-			mymap.insert({num[i],pool});
-			count[pool++]++;
+			int k = num[i] + 1;
+			while( mymap[k] != k)
+				k = mymap[k];
+			mymap[num[i]] = k;
+			degree[k]++;
 		}
-		if (left != -1 && right == -1)
+		if (mymap.count(num[i] - 1 ))
 		{
-			mymap.insert({num[i],left});
-			count[left]++;
+			int k = num[i] - 1;
+			while( mymap[k] != k)
+				k = mymap[k];
+			int k1 = num[i];
+			while( mymap[k1] != k1)
+				k1 = mymap[k1];
+			mymap[k] = k1;
+			degree[k1]+= degree[k];
 		}
-		if (left == -1 && right != -1)
-		{
-			mymap.insert({num[i],right});
-			count[right]++;
-		}
-		if (left != -1 && right != -1)
-		{
-			mymap.insert({num[i],right});
-			count[right]++;
-		}
-
-
 	}
+	int max = 0;	
+	for( int i = 0; i < num.size(); i++ )
+	{
+		if ( degree[num[i]] > max)
+			max = degree[num[i]];
+			
+	}
+	return max;
 }
 };
