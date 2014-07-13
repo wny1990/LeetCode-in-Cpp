@@ -5,6 +5,21 @@
 using namespace std;
 //class Solution {
 //public:
+void area(vector<int> &height , int i, int j)
+{
+	if (i=j)
+		return height[i];
+	if ( j - i == 1)
+		return min(height[i],height[j])*2;
+	int s1 = area
+
+}
+int largestRectangleArea(vector<int> &height) 
+{
+	return area(height,0,height,size());
+
+}
+/*
 int largestRectangleArea(vector<int> &height) 
 {
 	int max_area = 0;
@@ -26,6 +41,9 @@ int largestRectangleArea(vector<int> &height)
 	}
 	return max_area;
 }
+*/
+
+
 //};
 int main(){
 

@@ -12,6 +12,8 @@ public:
 vector<Interval> insert(vector<Interval> &intervals, Interval newInterval)
 {
 	int n = intervals.size();
+	int left = 0;
+	int right = n;
 	if (n == 0 || intervals.back().end < newInterval.start)
 	{
 		intervals.push_back(newInterval);

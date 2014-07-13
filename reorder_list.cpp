@@ -8,37 +8,52 @@
  */
 class Solution {
 public:
-void reorderList(ListNode *head) 
+
+ListNode* reverse(ListNode *head)
 {
-	queue<int> q1;        
-	queue<int> q2;        
 	if (head == NULL || head->next == NULL)
 		return head;
-	ListNode *fast = head; *slow = head;
-	fast = fast->next;
-	while( fast != NULL)
+
+	ListNode *pre = head;
+	ListNode *curr = head->next;
+
+	while( curr != NULL)
 	{
-		q1.push(slow);
-		q2.push(fast);
+		ListNode *temp = curr->next;
+		curr->next = pre;
+		pre = curr;
+		curr = temp;
+	}
+
+	head->next = NULL;
+	return pre;
+}
+void reorderList(ListNode *head) 
+{
+	if (head == NULL || head->next == NULL)
+		return;
+	ListNode *fast = head,*slow = head;
+	fast = fast->next;
+	while( fast->next != NULL)
+	{
 		fast = fast->next;
+		if (fast->next!=NULL)
+			fast = fast->next;
 		slow = slow->next;
 	}
-	
-	while( fast.size() || slow.size())
+	ListNode *head2 = slow->next;
+	slow->next = NULL;
+	head2 = reverse(head2);
+	ListNode *p = head;
+	while(head2 != NULL)
 	{
-		LisNode* p1 = NULL;
-		LisNode* p2 = NULL;
-		if (q1.size())
-		{
-			p1 = q1.front();
-		}
-		if (q2.size())
-		{
-			p2 = q2.front();
-		}
-		if (p2 == NULL)
-			continue;
-		
+		ListNode *temp = p->next;
+		ListNode *temp1 = head2->next;
+		p->next= head2;
+		head2->next = temp;
+		p =temp;
+		head2 = temp1;
 	}
+	return;
 }
 };
