@@ -60,4 +60,32 @@ int largestRectangleArea(vector<int> &height)
 }
 
 
+int maximalRectangle(vector<vector<char> > &matrix) 
+{
+	int n = matrix.size();
+	if (n == 0)
+		return 0;
+	int m = matrix.at(0).size();   
+	vector<vector<int> > hmatrix(n,vector<int>(m,0));
+	int i,j;
+	for ( j = 0; j < m; j++)
+			if (matrix[0][j] == '1')
+				hmatrix[0][j] = 1;
+	for ( i = 1; i < n; i++)
+		for ( j = 0; j < m; j++)
+		{	
+			if (matrix[i][j] == '1' )
+				hmatrix[i][j] = hmatrix[i-1][j] + 1;	
+			else
+				hmatrix[i][j] = 0;
+		}
+	int maxarea = 0;
+	for ( i = 0; i < n; i++)
+	{
+		int area = largestRectangleArea(hmatrix[i]);
+		if (maxarea < area)
+			maxarea = area;
+	}
+	return maxarea;
+}
 };

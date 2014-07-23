@@ -1,8 +1,3 @@
-#include<iostream>
-#include<deque>
-#include<map>
-using namespace std;
-
 class LRUCache{
 public:
 LRUCache(int capacity) 
@@ -12,33 +7,42 @@ LRUCache(int capacity)
     
 int get(int key)
 {
-	auto it = addr.find(key);
-	if (it == addr.end())
-		return -1;
-	int value = (*it).second;
-	q.earse(it);
-	q.push_back({key,value});
+	if(!addr.count(key))
+		return - 1;
+	auto it = addr[key];
+	int value = it->second;
+	q.erase(it);
+	q.push_front({key,value});
+	auto it1 = addr.find(key);
+	addr.erase(it1);
+        addr.insert({key,q.begin()});
 	return value;
-
 }
-    
+  
+
 void set(int key, int value)
 {
-	auto it = addr.find(key);
-	if (it != addr.end())
-		addr.earse(it);
-	if( q.size() == cap )
+	if (addr.count(key))
 	{
-		int k = q.front().first;
-		auto it1 = addr.find(k);
-		addr.earse(it1);
-		q.pop_front();
+		list<pair<int,int> >::iterator it = addr[key];
+		q.erase(it);
+		auto it1 = addr.find(key);
+		addr.erase(it1);
 	}
-	q.push_back({key,value});
-        addr.insert({key,q.end() - 1});
+
+	if( addr.size() == cap )
+	{
+		int k = q.back().first;
+		auto it1 = addr.find(k);
+		addr.erase(it1);
+		q.pop_back();
+	}
+	q.push_front({key,value});
+        addr.insert({key,q.begin()});
 }
+
 private:
 	int cap;
-	deque<int,int> q;
-	map<int, deque<int,int>::iterator > addr;
+	list<pair<int,int>> q;
+	unordered_map<int, list<pair<int,int> >::iterator > addr;
 };
