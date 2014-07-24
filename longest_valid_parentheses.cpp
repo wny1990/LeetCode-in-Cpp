@@ -1,4 +1,6 @@
 #include<iostream>
+#include<stack>
+#include<vector>
 using namespace std;
 //class Solution {
 //public:
@@ -6,43 +8,32 @@ int longestValidParentheses(string s)
 {
 	int n = s.size();
 	if ( n == 0 ) return 0;
-	int  unmatched;
-	int max = -1;
-	int i = 0;
-	while ( i < n )
+	stack<int> stk;
+	vector<bool> match(n,false);
+	for ( int i = 0; i < n; i ++ )
 	{
-		int j;
-		for ( j = i; j < n; j++ )
+		if ( s[i] == ')' &&  stk.size() && s[stk.top()]== '(')
 		{
-			if (j==i)
-			{
-				if ( s[i] == '(')
-					unmatched = 1;
-				else
-					unmatched = -1;
-			}	
-			else 
-			{
-				if( s[j] == '(' )
-			 		unmatched = unmatched + 1;
-				else
-			 		unmatched = unmatched - 1;
-			}		
-			if (unmatched < 0 )
-				break;
-			if ( unmatched== 0 && j-i > max)
-			{	cout << i << "  " << j << endl;
-				max = j- i;
-			}
+			match[stk.top()] = true;
+			match[i] = true;
+			stk.pop();	
 		}
-		if (j == n && unmatched > 0)
-			i+=unmatched;
-		else	
-			i = j + 1;
+		else if (s[i] == '(')
+			stk.push(i);
 	}
-	return max + 1;
-
-    }
+	int longest = 0;		
+	int width = 0;		
+	for ( int i = 0; i < n; i ++ )
+	{
+		if (match[i])
+			width++;
+		else
+			width = 0;
+		if (width > longest)
+			longest = width;
+	}
+return longest;
+}
 //};
 int main()
 {
