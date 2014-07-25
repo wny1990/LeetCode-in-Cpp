@@ -20,44 +20,42 @@ TreeNode* copy( TreeNode * node0)
 		node->right = copy(node0->right);
 	return node;
 }
-void construct(int n)
+
+void construct(int i, int j,TreeNode *node,vector<bool> flag)
 {
-	queue<pair<int,int>> q;
-	queue<TreeNode*> nodes;
-	q.push({1,n});
-	root = new TreeNode(0);
-	nodes.push(root);
-	while( q.size())
+
+	for( int k = i; k <= j; k++)
 	{
-		int i = q.front().first;
-		int j = q.front().second;
-		q.pop();
-		TreeNode* node = nodes.front();
-		nodes.pop();
-		for( int k = i; k <= j; k++)
+		vector<bool> flag1(flag);
+		node->val =k;
+		node->left = NULL;
+		node->right = NULL;
+		flag1[k-1] = true;
+
+		if( k-1 >= i )
 		{
-			node->val =k;
-			node->left = NULL;
-			node->right = NULL;
-			if( k-1 >= i )
-			{
-				TreeNode *lnode = new TreeNode(0);
-				node->left = lnode;
-				q.push({i,k-1});
-				nodes.push(lnode);
-			}
-			if (j >= k+1)
-			{
-				TreeNode *rnode = new TreeNode(0);
-				node->right = rnode;
-				q.push({k+1,j});
-				nodes.push(rnode);
-			}
-			if ( k == n)
-			{
-				TreeNode *root1 = copy(root);
-				result.push_back(root1);
-			}
+			TreeNode *lnode = new TreeNode(0);
+			node->left = lnode;
+			construct(i,k-1,lnode,flag1);
+		}
+
+		for( int s = 0; s <= k-2; s++)
+			flag1[s] = true;
+
+		if (j >= k+1)
+		{
+			TreeNode *rnode = new TreeNode(0);
+			node->right = rnode;
+			construct(k+1,j,rnode,flag1);
+		}
+		int fin = 0;
+		for( int s = 0; s < flag1.size() ; s++)
+			if (flag1[s])	
+				fin++;
+		if ( fin  == flag1.size())
+		{
+			TreeNode *root1 = copy(root);
+			result.push_back(root1);
 		}
 	}
 	return;
@@ -70,7 +68,9 @@ vector<TreeNode *> generateTrees(int n)
 		result.push_back(NULL);
 		return result;
 	}
-	construct(n);   
+	root = new TreeNode(0);
+	vector<bool> flag(n,false);
+	construct(1,n,root,flag);   
 	return result;    
 }
 private:
@@ -78,3 +78,5 @@ private:
 	vector<TreeNode *> result;
 	int size;
 };
+
+
