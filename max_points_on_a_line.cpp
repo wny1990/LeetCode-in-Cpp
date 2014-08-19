@@ -11,19 +11,44 @@ class Solution {
 public:
 int maxPoints(vector<Point> &points) 
 {
-	unordered_map< pair<ratio,ratio>,int > lines;
+	if ( points.size() < 2)
+		return points.size();
+	int maxp = 0;
 	for( int i = 0; i < points.size(); i ++)  
+	{
+		int lmax = 1;
+		int vertical = 1;
+		int overlap = 0;
+		int a1 = points[i].x;
+		int b1 = points[i].y;
+		map<double,int> lines;
 		for( int j = 0; j < i  ; j ++)
 		{
-			points[i].x = a1;
-			points[i].y = b1;
-			points[j].x = a2;
-			points[j].y = b2;
-			if (lines.count( {ratio<b1*a2-a1*b2,a2-a1>,ratio<b2-b1,a2-a1>}))  
-				lines[{ratio<b1*a2-a1*b2,a2-a1>,ratio<b2-b1,a2-a1>}]++;
+			int a2 = points[j].x;
+			int b2 = points[j].y;
+			if ( a1 == a2 && b1 == b2)
+			{
+				overlap++;
+				continue;
+			}
+			if ( a1 == a2 )
+				vertical++;
+			if (!lines.count((b2-b1)*1.0/(a2-a1)) )
+			{
+				lines[ (b2-b1)*1.0/(a2-a1)] = 2;
+				if (2 > lmax)
+					lmax = 2;
+			}
 			else
-				lines.insert( {ratio<b1*a2-a1*b2,a2-a1>,ratio<b2-b1,a2-a1>} );
+			{
+				int c = lines[(b2-b1)*1.0/(a2-a1)];
+				lines[(b2-b1)*1.0/(a2-a1)]++;
+				if (c+1 > lmax)
+					lmax = c+1;
+			}
 		}
-	return 0;
+		maxp = max(maxp,max(vertical+overlap,lmax+overlap));
+	}
+	return maxp;
 }
 };
