@@ -9,74 +9,38 @@
  */
 class Solution {
 public:
-TreeNode* copy( TreeNode * node0)
+TreeNode* copyTree(TreeNode* node,int offset)
 {
-	if (root == NULL)
+	if (node == NULL )
 		return NULL;
-	TreeNode *node = new TreeNode(node0->val);
-	if (node0->left != NULL)
-		node->left = copy(node0->left);
-	if (node0->right != NULL)
-		node->right = copy(node0->right);
-	return node;
-}
+	TreeNode* neo_node = new TreeNode(node->val + offset);
+	if (node->left != NULL)
+		neo_node->left = copyTree(node->left,offset);
+	if (node->right != NULL)
+		neo_node->right = copyTree(node->right,offset);
+	return neo_node;
 
-void construct(int i, int j,TreeNode *node,vector<bool> flag)
+}
+vector<TreeNode*> generateTrees(int n) 
 {
-
-	for( int k = i; k <= j; k++)
-	{
-		vector<bool> flag1(flag);
-		node->val =k;
-		node->left = NULL;
-		node->right = NULL;
-		flag1[k-1] = true;
-
-		if( k-1 >= i )
+	vector<vector<TreeNode*>> trees(n+1,vector<TreeNode*>());
+	trees.at(0).push_back(NULL);
+	for( int size  = 1; size <= n; size++)
+		for ( int ls = 0; ls < size; ls++)
 		{
-			TreeNode *lnode = new TreeNode(0);
-			node->left = lnode;
-			construct(i,k-1,lnode,flag1);
+			for ( int left = 0; left < trees.at(ls).size(); left++)
+				for ( int right = 0; right < trees.at(size-ls-1).size(); right++)
+				{
+					TreeNode *lnode,*rnode;
+					lnode = trees.at(ls).at(left);
+					rnode = trees.at(size-ls-1).at(right);
+					TreeNode* root = new TreeNode(ls+1);
+					root->left = lnode;
+					rnode = copyTree(rnode,ls+1);
+					root->right = rnode;
+					trees.at(size).push_back(root);
+				}
 		}
-
-		for( int s = 0; s <= k-2; s++)
-			flag1[s] = true;
-
-		if (j >= k+1)
-		{
-			TreeNode *rnode = new TreeNode(0);
-			node->right = rnode;
-			construct(k+1,j,rnode,flag1);
-		}
-		int fin = 0;
-		for( int s = 0; s < flag1.size() ; s++)
-			if (flag1[s])	
-				fin++;
-		if ( fin  == flag1.size())
-		{
-			TreeNode *root1 = copy(root);
-			result.push_back(root1);
-		}
-	}
-	return;
+	return trees.at(n);	
 }
-vector<TreeNode *> generateTrees(int n) 
-{
-	size = n;
-	if( n == 0)
-	{
-		result.push_back(NULL);
-		return result;
-	}
-	root = new TreeNode(0);
-	vector<bool> flag(n,false);
-	construct(1,n,root,flag);   
-	return result;    
-}
-private:
-	TreeNode *root;
-	vector<TreeNode *> result;
-	int size;
 };
-
-
